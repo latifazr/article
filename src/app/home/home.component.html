@@ -1,0 +1,90 @@
+<div class="page">
+  <div class="container-fluid cont">
+    <h3 style="color:white">{{name_user}}</h3>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="javascript:void(0)" id="ajoutART" (click)="toggle()">ajouter article</a></li>
+      <li><a href="javascript:void(0)" id="listeART" (click)="tolist()">liste article</a></li>
+    </ul>
+    <button class="btn btn-primary dec" (click)="deconnecter()">deconnecter</button>
+  </div>
+  <div *ngIf="show_dialog" class="ajout">
+    <h2>Nouveau Article</h2>
+    <form [formGroup]="ajouArticleForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4" style="color:blue">{{ ajouArticleForm.value.ecrivant}}</label>
+        </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">image</label>
+            <input type="file" (change)="uploadFile($event)" accept=".png,.jpg" class="form-control"
+              formControlName="image">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputtitre">titre</label>
+          <input type="text" class="form-control" formControlName="titre" placeholder="titre">
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">Déscription</label>
+          <textarea class="form-control" formControlName="description" rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary but" (click)="ajouter(ajouArticleForm)">Ajouter</button>
+    </form>
+  </div>
+  <div *ngIf="show_list" class="ajout">
+    <div *ngFor="let article of articles | async">
+      <a>{{ article.ecrivant}}</a>&nbsp;
+      <a>{{ article.date}}</a>&nbsp;
+      <a>{{ article.titre}}</a>&nbsp;
+      <a>{{ article.description}}</a>&nbsp;
+      <img src="{{article.image}}" class="taille">
+      <div *ngIf="article.ecrivant == name_user">
+        <button class="btn btn-primary" (click)="DeleteItem(article.key)">sup</button>&nbsp;
+        <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+          (click)="UpdateItem(article)">mod</button>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modification article</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form [formGroup]="modifArticleForm">
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputEmail4" style="color:blue">{{ modifArticleForm.value.ecrivant}}</label>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputPassword4">image</label>
+               <!-- <img src="{{ modifArticleForm.image }}" class="taille">-->
+                <input type="file" (change)="uploadFile($event)" accept=".png,.jpg" class="form-control"
+                  formControlName="image">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputtitre">titre</label>
+              <input type="text" class="form-control" formControlName="titre" placeholder="titre">
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Déscription</label>
+              <textarea class="form-control" formControlName="description" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler MOD</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="ok(modifArticleForm)">Enregister
+              MOD</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
